@@ -1,0 +1,93 @@
+function discordFixText(t: text) :: text:
+	replace all "§1" with "" in {_t}
+	replace all "§2" with "" in {_t}
+	replace all "§3" with "" in {_t}
+	replace all "§4" with "" in {_t}
+	replace all "§5" with "" in {_t}
+	replace all "§6" with "" in {_t}
+	replace all "§7" with "" in {_t}
+	replace all "§8" with "" in {_t}
+	replace all "§9" with "" in {_t}
+	replace all "§0" with "" in {_t}
+	replace all "§a" with "" in {_t}
+	replace all "§e" with "" in {_t}
+	replace all "§c" with "" in {_t}
+	replace all "§b" with "" in {_t}
+	replace all "§f" with "" in {_t}
+	replace all "§d" with "" in {_t}
+
+	replace all "§l" with "" in {_t}
+	replace all "§o" with "" in {_t}
+	replace all "§n" with "" in {_t}
+	replace all "§m" with "" in {_t}
+	replace all "§r" with "" in {_t}
+
+	return {_t}
+
+on load:
+	login to "Njk2MzQzMzUyODE1MTI0NTAx.XonXJQ.wq-YZfrOyez0d5U5FxMPVbYrIdU" with name "PZ"
+	loop all offline players:
+		if {admin_status::%loop-offline player%} is true:
+			message "&8[&5Plebzone Admin&8]&5 Bot succesfully logged in as &8&lPlebzone Bot&5 on discord!" to loop-offline player
+	set {discord_channel} to "696337511521321032"
+	set {discord_channel_logs} to "696472599479451678"
+
+on join:
+	add 1 to {number_online}
+	send discordFixText("**[:green_circle:]** %player% joined the server! Ask them what's up!") to channel with id {discord_channel} with "PZ"
+
+on quit:
+	send discordFixText("**[:red_circle:]** %player% left the server! See you later!") to channel with id {discord_channel} with "PZ"
+	if {number_online} is more than 0:
+		subtract 1 from {number_online}
+
+every tick:
+	set the topic of channel with id {discord_channel} to "Number of players online: %{number_online}%" with "PZ"
+
+on chat:
+	if message does not contain "-r":
+		send discordFixText("**%{prefix::%player%}%%display name of player%%{suffix::%player%}%: **%message%") to channel with id {discord_channel} with "PZ"
+		send discordFixText("**%{prefix::%player%}%%display name of player%%{suffix::%player%}%: **%message%") to channel with id {discord_channel_logs} with "PZ"
+
+on guild message received seen by "PZ":
+	if event-channel is channel with id {discord_channel}:
+		broadcast "&f[&dPlebzone Discord&f][&d%discord name of event-user%&f]:&d %event-string%"
+
+on death of player:
+	send discordFixText(":skull: **%display name of player%** *aka %player%* bit the dust :skull:") to channel with id {discord_channel} with "PZ"
+	send discordFixText(":skull: **%display name of player%** *aka %player%* bit the dust :skull:") to channel with id {discord_channel_logs} with "PZ"
+
+on explosion prime:
+	set {near-event-explosion::*} to ""
+
+	loop players in radius 50 of event-location:
+		add loop-player to {near-event::*}
+
+	send discordFixText("**[:blue_square:]** Explosion __*primed*__ happened in world named: **%event-world%**, made by entity: **%event-entity%**, players near event (50 block radius): **%{near-event::*}%**") to channel with id {discord_channel_logs} with "PZ"
+
+on connect:
+	send discordFixText("**[:blue_square:]** player: **%player%** attempted to connect") to channel with id {discord_channel_logs} with "PZ"
+
+on craft:
+	send discordFixText("**[:blue_square:]** player: **%player%** crafted %event-itemtype% at location: **%event-location%**") to channel with id {discord_channel_logs} with "PZ"
+
+on block break:
+	send discordFixText("**[:blue_square:]** player: **%player%** broke block: **%block at event-location%** at location: **%event-location%**") to channel with id {discord_channel_logs} with "PZ"
+
+on damage:
+	send discordFixText("**[:blue_square:]** source: **%damage cause%** dealt: **%damage%** to recipient: **%victim%** in world: **%event-world%** at location: **%event-location%**") to channel with id {discord_channel_logs} with "PZ"
+
+on teleport:
+	send discordFixText("**[:blue_square:]** player: **%event-player%** teleported to: **%event-location%**") to channel with id {discord_channel_logs} with "PZ"
+
+on shoot:
+	send discordFixText("**[:blue_square:]** source: **%shooter%** shot projectile: **%projectile%** at location: **%event-location%**") to channel with id {discord_channel_logs} with "PZ"
+
+on redstone:
+	send discordFixText("**[:blue_square:] **redstone current** applied at location: **%event-location%** ") to channel with id {discord_channel_logs} with "PZ"
+
+on place:
+	send discordFixText("**[:blue_square:]** block: **%event-block%** placed at location: **%event-location%** by player: **%event-player%** ") to channel with id {discord_channel_logs} with "PZ"
+
+#on any movement: #Lots of triggers, can't keep in discord
+	#send discordFixText("**[:blue_square:]** player: **%event-player%** moved at/from location: **%event-location%**") to channel with id {discord_channel_logs} with "PZ"

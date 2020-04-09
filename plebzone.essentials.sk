@@ -1,0 +1,124 @@
+options:
+    pleb-ep: &f[&ePlebzone Essentials&f]&e
+    pleb-ep-b: &f[&ePlebzone Essentials Broadcast&f]&e
+
+function colourFix(t: text) :: text:
+	replace all "$lr$" with "<light red>" in {_t}
+	replace all "$dr$" with "<dark red>" in {_t}
+	replace all "$lgr$" with "<light grey>" in {_t}
+	replace all "$dgr$" with "<dark grey>" in {_t}
+	replace all "$db$" with "<dark blue>" in {_t}
+	replace all "$lb$" with "<light blue>" in {_t}
+	replace all "$lp$" with "<light purple>" in {_t}
+	replace all "$dp$" with "<dark purple>" in {_t}
+	replace all "$lg$" with "<light green>" in {_t}
+	replace all "$dg$" with "<dark green>" in {_t}
+	replace all "$ly$" with "<light yellow>" in {_t}
+	replace all "$dy$" with "<dark yellow>" in {_t}
+	replace all "$i$" with "<indigo>" in {_t}
+	replace all "$w$" with "<white>" in {_t}
+	replace all "$b$" with "<black>" in {_t}
+	replace all "$c$" with "<cyan>" in {_t}
+
+	replace all "$l$" with "<bold>" in {_t}
+	replace all "$o$" with "<italics>" in {_t}
+	replace all "$_$" with "<underline>" in {_t}
+	replace all "$-$" with "<strikethrough>" in {_t}
+	replace all "$m$" with "<magic>" in {_t}
+	replace all "$r$" with "<reset>" in {_t}
+
+	return {_t}
+
+on chat:
+	replace all "<here>" and "<here" and "here>" and "-here-" and "-here" and "here-" with "&f[&d%player's x coordinate%&f][&d%player's y coordinate%&f][&d%player's z coordinate%&f]%{chat_colour::%player%}%" in {_t}
+	replace all "<bal>" and "<bal" and "bal>" and "-bal" and "bal-" and "-bal-" with "&f[&d£%{balance::%player%}%&f]%{chat_colour::%player%}%" in {_t}
+
+	if {chat_colour::%player%} is not set:
+		set {chat_colour::%player%} to "&f"
+
+	set message to colourFix(message)
+	if {%player%::clan} is set:
+		broadcast "%display name of player% &f&l[&3%{%player%::clan}%&f&l]&f: %{chat_colour::%player%}%%message%"
+	else:
+		broadcast "%display name of player%&f&l: %{chat_colour::%player%}%%message%"
+	cancel event
+
+command /broadcast <text>:
+	aliases: /bc
+	permission: plebzone.essentials.admin
+	trigger:
+		broadcast "{@pleb-ep-b} %colourFix(arg 1)%"
+
+command /gms [<offline player>]:
+	permission: plebzone.admin.gamemode
+	trigger:
+		if arg 1 is not set:
+			set player's gamemode to survival
+			message "{@pleb-ep} Gamemode set to &fSurvival"
+		else:
+			set arg 1's gamemode to survival
+			message "{@pleb-ep} Gamemode set to &fSurvival&e for &f%arg 1%"
+			message "{@pleb-ep} Gamemode set to &fSurvival" to arg 1
+
+command /gmsp [<offline player>]:
+	permission: plebzone.admin.gamemode
+	trigger:
+		if arg 1 is not set:
+			set player's gamemode to spectator
+			message "{@pleb-ep} Gamemode set to &fSpectator"
+		else:
+			set arg 1's gamemode to spectator
+			message "{@pleb-ep} Gamemode set to &fSpectator&e for &f%arg 1%"
+			message "{@pleb-ep} Gamemode set to &fSpectator" to arg 1
+
+command /gmc [<offline player>]:
+	permission: plebzone.admin.gamemode
+	trigger:
+		if arg 1 is not set:
+			set player's gamemode to creative
+			message "{@pleb-ep} Gamemode set to &fCreative"
+		else:
+			set arg 1's gamemode to creative
+			message "{@pleb-ep} Gamemode set to &fCreative&e for &f%arg 1%"
+			message "{@pleb-ep} Gamemode set to &fCreative" to arg 1
+
+command /gma [<offline player>]:
+	permission: plebzone.admin.gamemode
+	trigger:
+		if arg 1 is not set:
+			set player's gamemode to adventure
+			message "{@pleb-ep} Gamemode set to &fAdventure"
+		else:
+			set arg 1's gamemode to adventure
+			message "{@pleb-ep} Gamemode set to &fAdventure&e for &f%arg 1%"
+			message "{@pleb-ep} Gamemode set to &fAdventure" to arg 1
+
+command /tpask <offline player>:
+    aliases: /tpa
+    trigger:
+        if arg 1 is set:
+            if arg 1 is online:
+                message "{@pleb-ep} You have requested to teleport to &f%arg 1% they must accept in the next &f2 minutes&e!"
+                add player to {essentials::players::%arg 1%::teleport::requests::*}
+                message "{@pleb-ep} &f%player%&e has requested to teleport to you! You must accept in the next &f2 minutes&e! Use &f/tpaccept <player>&e to accept the request" to arg 1
+                wait 2 minutes
+                remove player from {essentials::players::%arg 1%::teleport::requests::*}
+            else:
+                message "{@pleb-ep} The player &f%arg 1%&e is not online!"
+        else:
+            message "{@pleb-ep} You must set a player to ask to teleport to!"
+
+command /tpaccept <offline player>:
+    trigger:
+        if arg 1 is set:
+            if arg 1 is online:
+                if {essentials::players::%arg 1%::teleport::requests::*} contains arg 1:
+                    message "{@pleb-ep} Teleporting you to &f%arg 1%"
+                    teleport player to location of arg 1
+                    message "{@pleb-ep} &f%player%&e accepted your teleport request!" to arg 1
+                else:
+                    message "{@pleb-ep} You don't have a teleport request from &f%arg 1%&e! Ask them to send one!"
+            else:
+                message "{@pleb-ep} You can only accept a teleport request from someone who is online!"
+        else:
+            message "{@pleb-ep} You must set a player to accept the teleport from!"
