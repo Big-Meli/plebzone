@@ -25,7 +25,7 @@ function discordFixText(t: text) :: text:
 	return {_t}
 
 on load:
-	login to "Njk2MzQzMzUyODE1MTI0NTAx.XonXJQ.wq-YZfrOyez0d5U5FxMPVbYrIdU" with name "PZ"
+	login to "TOKEN" with name "PZ"
 	loop all offline players:
 		if {admin_status::%loop-offline player%} is true:
 			message "&8[&5Plebzone Admin&8]&5 Bot succesfully logged in as &8&lPlebzone Bot&5 on discord!" to loop-offline player
