@@ -1,0 +1,6 @@
+@Errors
+set ValueError to Doesn't Exist
+set SyntaxError to Wrongly Put
+
+@Methods
+set message to write

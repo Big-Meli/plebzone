@@ -1,0 +1,14 @@
+//Loop checks for end, needed!
+//@loop 10 times
+send "$_smhello year 13's$_sm" @from "D. Anderson says to you "
+//end
+
+//Constant variable demo!
+//set _ds to doublecolon
+
+//Off topic calculate keyword! (not clever yet)
+//set decimal somemath to log @with prefix Enter a number >>
+//set decimal finalmath to calculate somemath / 12.0
+
+//With nullsender keyphrase allows user to have no stew output message!
+//send $finalmath was the answer to the calculation! of $somemath divided by 12.0! @with nullsender

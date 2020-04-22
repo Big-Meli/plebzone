@@ -1,0 +1,6 @@
+@import main_config
+set text consolename to stew
+message "What is your name?"
+set text yourname to log
+wait 2s
+message "$consolename says 'Hello!' to $yourname"

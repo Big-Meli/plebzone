@@ -1,0 +1,34 @@
+//prefixes
+
+.InternalError as ! //Error within stew's source code
+.ExternalError as $ //Error within source code of created stew (boiled|compiled)
+
+
+//errors
+
+.SyntaxError as SyntaxError
+.ValueError as ValueError
+.ReferenceError as ReferenceError
+
+//keywords
+
+.message as send
+.wait as wait
+.set as set
+.goto as goto
+
+//supers
+
+.loop as loop
+.location as location
+.stop as stop
+
+//types
+
+.string as text
+.int as whole
+.float as decimal
+.bool as boolean
+
+//secret
+.console as Stew-P2
